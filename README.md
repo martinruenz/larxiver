@@ -16,6 +16,16 @@ larxiver is a tiny script to compress latex projects by downscaling images. It k
 * **-v**: Verbose output *(optional)*
 * **-vv**: Very verbose output *(optional)*
 
+## Dependencies
+
+* pdflatex
+* python3
+* [pillow](https://pypi.org/project/Pillow/)
+
+## Method
+
+larxiver analyzes the log file of pdflatex and records all input files and the used size of image files. Input files are copied to a temporary output directory, which is later zipped; and images are scaled to produce a given DPI in this process.
+
 ## Related projects
 * https://github.com/jopasserat/prepare-latex-hal-arxiv.sh
 * https://github.com/lukeolson/clean-latex-to-arxiv
