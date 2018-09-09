@@ -7,6 +7,9 @@ import re
 import shutil
 from PIL import Image
 
+image_extensions = ['.png', '.jpg']
+ignore_extensions = ['.out', '.aux']
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", required=True, help="Input latex file")
 parser.add_argument("-o", required=True, help="Output zip file")
@@ -46,7 +49,7 @@ with open(os.path.join(tmp_dir, basename_root + ".log"), 'r', encoding="latin-1"
     m = image_use_re.findall(log)
     image_infos = []
     for m in image_use_re.finditer(log):
-        if m is not None and os.path.splitext(m.group('file'))[1].lower() in ['.png', '.jpg']:
+        if m is not None and os.path.splitext(m.group('file'))[1].lower() in image_extensions:
             image_infos.append({'file': m.group('file'),
                                 'pt_x': float(m.group('x')),
                                 'pt_y': float(m.group('y'))
@@ -83,14 +86,14 @@ for f in input_files:
 
     out_dir = os.path.dirname(path_out)
     ext = os.path.splitext(path_in)[1]
-    if not os.path.exists(path_out) and not ext in ['.out', '.aux']:
+    if not os.path.exists(path_out) and not ext in ignore_extensions:
         if not os.path.isdir(out_dir):
             os.makedirs(out_dir)
 
         if verbose:
             print("Copying", path_in, "to", path_out)
 
-        if ext in ['.png', '.jpg']:
+        if ext in image_extensions:
             print("WARNING: Copying image file {} (without scaling). The regular expression probably failed!".format(path_in))
 
         shutil.copyfile(path_in, path_out)
