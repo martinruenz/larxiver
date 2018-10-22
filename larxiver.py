@@ -47,7 +47,6 @@ print("Parsing log...")
 image_use_re = re.compile('<use (?P<file>.*)>\n(.*\n)?.*\n.*Requested size: [+-]?(?P<x>(\d+\.?\d*)|(\.\d+))pt x [+-]?(?P<y>(\d+\.?\d*)|(\.\d+))pt.')
 with open(os.path.join(tmp_dir, basename_root + ".log"), 'r', encoding="latin-1") as log_file:
     log = log_file.read()
-    m = image_use_re.findall(log)
     image_infos = []
     for m in image_use_re.finditer(log):
         if m is not None and os.path.splitext(m.group('file'))[1].lower() in image_extensions:
