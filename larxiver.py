@@ -20,12 +20,13 @@ parser.add_argument("-k", required=False, help="Keep temporary files", action='s
 args = parser.parse_args()
 verbose = args.v or args.vv
 
-tmp_dir = tempfile.mkdtemp()
-output_dir = os.path.join(tmp_dir, "structure")
-os.mkdir(output_dir)
 input_file = os.path.abspath(os.path.expanduser(args.i))
 input_dir = os.path.dirname(input_file)
 basename_root, basename_ext = os.path.splitext(os.path.basename(input_file))
+tmp_dir = tempfile.mkdtemp()
+tmp_filepath = os.path.join(tmp_dir, basename_root)
+output_dir = os.path.join(tmp_dir, "structure")
+os.mkdir(output_dir)
 output_file = os.path.abspath(os.path.expanduser(args.o))
 print("Using temporary directory:", tmp_dir)
 
@@ -100,6 +101,9 @@ for f in input_files:
     shutil.copyfile(input_file, os.path.join(output_dir, os.path.basename(input_file)))
 
 print("Zipping files...")
+if output_file.endswith('.zip'):
+    # Remove extension .zip, as it will be added automatically
+    output_file = output_file[:-4]
 shutil.make_archive(output_file, 'zip', output_dir)
 
 if not args.k:
