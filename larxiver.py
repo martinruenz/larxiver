@@ -36,16 +36,29 @@ subprocess.run(args=['pdflatex', '-interaction', 'nonstopmode', '-recorder', '-o
                stdout=None if args.vv else subprocess.DEVNULL,
                check=True)
 
+# The fls file lists most of the files used by your tex document
 print("Parsing fls...")
-with open(os.path.join(tmp_dir, basename_root + ".fls"), 'r') as fls_file:
+with open(tmp_filepath + ".fls", 'r') as fls_file:
     fls_lines = fls_file.readlines()
     fls_lines = [l.split() for l in fls_lines]
     fls_lines = [l[1] for l in fls_lines if l[0]=='INPUT']
-    input_files = [f for f in fls_lines if os.path.exists(os.path.abspath(os.path.join(input_dir, f)))]
+    input_files = [f for f in fls_lines if os.path.exists(os.path.join(input_dir, f))]
+
+# The aux file contains information about used bibliography files
+print("Parsing aux...")
+bib_re = re.compile(r'\\bibdata{(.*)}')
+with open(tmp_filepath + ".aux", 'r') as aux_file:
+    aux = aux_file.read()
+    r = bib_re.findall(aux)
+    for f in r:
+        if os.path.exists(os.path.join(input_dir, f)):
+            input_files.append(f)
+        if os.path.exists(os.path.join(input_dir, f + '.bib')):
+            input_files.append(f + '.bib')
 
 print("Parsing log...")
 image_use_re = re.compile('<use (?P<file>.*)>\n(.*\n)?.*\n.*Requested size: [+-]?(?P<x>(\d+\.?\d*)|(\.\d+))pt x [+-]?(?P<y>(\d+\.?\d*)|(\.\d+))pt.')
-with open(os.path.join(tmp_dir, basename_root + ".log"), 'r', encoding="latin-1") as log_file:
+with open(tmp_filepath + '.log', 'r', encoding="latin-1") as log_file:
     log = log_file.read()
     image_infos = []
     for m in image_use_re.finditer(log):
