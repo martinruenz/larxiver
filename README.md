@@ -11,7 +11,7 @@ larxiver is a tiny script to compress latex projects by downscaling images. It k
 
 * **-i**: Input latex file
 * **-o**: Output zip file
-* **-r**: Target DPI, *(optional, default 300)*
+* **-r**: Target DPI, *(optional, default 0, copies without rescaling)*
 * **-k**: Keep temporary files *(optional)*
 * **-v**: Verbose output *(optional)*
 * **-vv**: Very verbose output *(optional)*
