@@ -13,7 +13,7 @@ ignore_extensions = ['.out', '.aux']
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", required=True, help="Input latex file")
 parser.add_argument("-o", required=True, help="Output zip file")
-parser.add_argument("-r", required=False, default=300, type=int, help="Target DPI")
+parser.add_argument("-r", required=False, default=0, type=int, help="Target DPI")
 parser.add_argument("-v", required=False, help="Verbose output", action='store_true')
 parser.add_argument("-vv", required=False, help="Very verbose output", action='store_true')
 parser.add_argument("-k", required=False, help="Keep temporary files", action='store_true')
@@ -81,16 +81,21 @@ for ii in image_infos:
     if verbose:
         print("Scaling", img_path_in, "to", img_path_out)
 
-    img = Image.open(img_path_in)
-    w, h = img.size
-    s = max(ii['pt_x'] / w, ii['pt_y'] / h)
-    s = min(s * args.r / 72, 1)
-    img.resize((int(s*w),int(s*h)), Image.LANCZOS).save(img_path_out)
+    vv_msg = "file:", ii['file'], "pt_x:", ii['pt_x'], "pt_y:", ii['pt_y']
+
+    if args.r == 0:  # If DPI is 0, just copy the image
+        shutil.copyfile(img_path_in, img_path_out)
+    else:
+        img = Image.open(img_path_in)
+        w, h = img.size
+        s = max(ii['pt_x'] / w, ii['pt_y'] / h)
+        s = min(s * args.r / 72, 1)
+        img.resize((int(s*w),int(s*h)), Image.LANCZOS).save(img_path_out)
+
+        vv_msg += "w:", w, "h:", h, "scale:", s
 
     if args.vv:
-        print("file:", ii['file'],
-              "pt_x:", ii['pt_x'], "pt_y:", ii['pt_y'],
-              "w:", w, "h:", h, "scale:", s)
+        print(vv_msg)
 
 print("Copy remaining files...")
 for f in input_files:
