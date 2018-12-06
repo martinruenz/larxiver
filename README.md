@@ -1,5 +1,5 @@
 # larxiver
-larxiver is a tiny script to compress latex projects by downscaling images. It keeps the original directory structure and is intended to ease the publishing process. Archives generated with this script can be uploaded to [arxiv](https://arxiv.org/) directly.
+larxiver is a tiny script to compress latex projects by only including used files and optionally downscaling images. It keeps the original directory structure and is intended to ease the publishing process. Archives generated with this script can be uploaded to [arxiv](https://arxiv.org/) directly.
 
 ## Example usage
 
