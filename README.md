@@ -45,3 +45,5 @@ Note, however, that larxiver can produce better results in some cases as it is n
 * https://github.com/lukeolson/clean-latex-to-arxiv
 * https://github.com/floriangeigl/arxiv_converter
 * https://github.com/jm-cc/arxivify
+* https://github.com/dougalsutherland/arxiv-collector
+* https://github.com/google-research/arxiv-latex-cleaner
